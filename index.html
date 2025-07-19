@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz Candilib</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 500px;
+      padding: 20px;
+      text-align: center;
+    }
+    .progress {
+      height: 10px;
+      width: 100%;
+      background: #ddd;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #28a745;
+      width: 0%;
+      transition: width 0.5s;
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .options button:hover {
+      background: #218838;
+    }
+    .images-section {
+      margin: 20px 0;
+    }
+    .images-section img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .depoimentos {
+      margin: 30px 0;
+      padding: 20px;
+      background: #f8f8f8;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .depoimento {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .depoimento p {
+      font-style: italic;
+      margin-bottom: 5px;
+    }
+    .depoimento span {
+      font-weight: bold;
+    }
+    .final-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .final-buttons button {
+      background: #007bff;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 48%;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .final-buttons button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="images-section">
+      <img src="https://conteudo.imguol.com.br/c/entretenimento/d7/2019/09/23/candidiase-mulher-com-coceira-dor-vagina-1569269179549_v2_900x506.jpg" alt="Imagem da candidíase" />
+    </div>
+
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+
+    <div class="depoimentos">
+      <div class="depoimento">
+        <p>“Sofri com candidíase por anos, mas o Candilib mudou minha vida em semanas!”</p>
+        <span>— Camila, 32 anos</span>
+      </div>
+      <div class="depoimento">
+        <p>“Achei que nunca ia me livrar das crises... Hoje me sinto livre!”</p>
+        <span>— Juliana, 28 anos</span>
+      </div>
+      <div class="depoimento">
+        <p>“Simples, natural e eficaz. Minha autoestima voltou!”</p>
+        <span>— Priscila, 40 anos</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  const questions = [
+    {
+      q: "Você sente coceira ou ardência frequente na região íntima?",
+      a: ["Sim, é recorrente", "Às vezes", "Não"]
+    },
+    {
+      q: "Você já teve crises de candidíase mais de 2 vezes ao ano?",
+      a: ["Sim, várias vezes", "Poucas vezes", "Nunca"]
+    },
+    {
+      q: "Você já tentou algum tratamento e não funcionou?",
+      a: ["Sim, vários", "Apenas um", "Nunca tratei"]
+    },
+    {
+      q: "Você sente vergonha ou desconforto ao falar sobre isso?",
+      a: ["Sim, bastante", "Um pouco", "Não"]
+    },
+    {
+      q: "Você sabia que a candidíase pode afetar sua libido e autoestima?",
+      a: ["Não sabia", "Já ouvi falar", "Sim, sabia"]
+    },
+    {
+      q: "Você estaria disposta a usar um produto natural e aprovado pela Anvisa?",
+      a: ["Sim, com certeza", "Depende do valor", "Não confio"]
+    },
+    {
+      q: "Você prefere pagar somente na entrega do tratamento?",
+      a: ["Sim, me sinto mais segura", "Não, posso pagar agora"]
+    }
+  ];
+
+  const images = [
+    "https://briannanicoletti.com.br/wp-content/uploads/2023/04/candidiase-de-repeticao-capa.jpg",
+    "https://conteudo.imguol.com.br/c/entretenimento/d7/2019/09/23/candidiase-mulher-com-coceira-dor-vagina-1569269179549_v2_615x300.jpg",
+    "https://guiadafarmacia.com.br/wp-content/uploads/2019/10/candidiase.jpg",
+    "https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/R3Z74KWF6JI27N2QDWG34A4GYA.jpg?smart=true&auth=a6e5015714440e36524351f6c22932daebc184ea351da66a27c00aeae5febc0b&width=1200&height=630",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM15qkg29_-uakqAYdIehPPVVwCwW0vaeNKQ&s",
+    "https://img.freepik.com/fotos-gratis/conceito-de-spa-de-alto-angulo-com-pedras-e-plantas_23-2148268493.jpg?semt=ais_hybrid&w=740",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4b_yhsN5oneDTDMijfcqdloS6MUYVimKXw&s"
+  ];
+
+  let currentQuestion = 0;
+  const totalQuestions = questions.length;
+  const answers = [];
+
+  function renderQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById('question').innerText = q.q;
+    document.getElementById('options').innerHTML = '';
+
+    // Atualizar imagem com base na pergunta
+    document.querySelector('.images-section img').src = images[currentQuestion];
+
+    q.a.forEach(answer => {
+      const btn = document.createElement('button');
+      btn.innerText = answer;
+      btn.onclick = () => {
+        answers.push(`${q.q} => ${answer}`);
+        currentQuestion++;
+        updateProgressBar();
+        if (currentQuestion < totalQuestions) {
+          renderQuestion();
+        } else {
+          showFinalOptions();
+        }
+      };
+      document.getElementById('options').appendChild(btn);
+    });
+  }
+
+  function updateProgressBar() {
+    const percent = (currentQuestion / totalQuestions) * 100;
+    document.getElementById('progressBar').style.width = percent + '%';
+  }
+
+  function showFinalOptions() {
+    document.getElementById('question').innerText = "Obrigado por completar o quiz! O que você gostaria de fazer agora?";
+    const optionsDiv = document.getElementById('options');
+    optionsDiv.innerHTML = '';
+
+    // Remove imagem final (ou troca por outra estática, se quiser)
+    document.querySelector('.images-section img').src = "https://img.freepik.com/fotos-premium/resposta-positiva-excelente-mulher-feliz-sorridente-fecha-os-olhos-mostrando-sinais-de-aprovacao-gosta-e-concorda-de-pe-na-camiseta-contra-o-fundo-branco_176420-47273.jpg";
+
+    const whatsappBtn = document.createElement('button');
+    whatsappBtn.innerText = "Falar com um especialista (WhatsApp)";
+    whatsappBtn.onclick = () => {
+      const phone = "12991463146";
+      const message = encodeURIComponent(
+        "Olá, acabei de responder o quiz sobre candidíase e aqui estão minhas respostas:\n\n" +
+        answers.join("\n") +
+        "\n\nGostaria de saber mais sobre o tratamento com Candilib."
+      );
+      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+    };
+
+    const siteBtn = document.createElement('button');
+    siteBtn.innerText = "Visitar o site e fazer a compra";
+    siteBtn.onclick = () => {
+      window.open('candilib.html', '_blank');
+    };
+
+    const finalButtonsContainer = document.createElement('div');
+    finalButtonsContainer.classList.add('final-buttons');
+    finalButtonsContainer.appendChild(whatsappBtn);
+    finalButtonsContainer.appendChild(siteBtn);
+
+    optionsDiv.appendChild(finalButtonsContainer);
+    document.getElementById('progressBar').style.width = '100%';
+  }
+
+  renderQuestion();
+</script>
+
+</body>
+</html>
