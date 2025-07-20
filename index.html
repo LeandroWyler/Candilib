@@ -61,6 +61,10 @@
       border-radius: 10px;
       margin-bottom: 10px;
     }
+    #video-container {
+      display: none;
+      margin-top: 20px;
+    }
     .depoimentos {
       margin: 30px 0;
       padding: 20px;
@@ -112,6 +116,14 @@
       <img src="https://conteudo.imguol.com.br/c/entretenimento/d7/2019/09/23/candidiase-mulher-com-coceira-dor-vagina-1569269179549_v2_900x506.jpg" alt="Imagem da candidíase" />
     </div>
 
+    <div id="video-container">
+      <p><strong>Assista ao vídeo abaixo antes de continuar:</strong></p>
+      <video id="quiz-video" width="100%" controls>
+        <source src="https://drive.google.com/drive/folders/1aCTAuCBnCMLkLZZsQJgi4V4hfbyyKffn?hl=pt-br" type="video/mp4">
+        Seu navegador não suporta a reprodução de vídeo.
+      </video>
+    </div>
+
     <div class="question" id="question"></div>
     <div class="options" id="options"></div>
 
@@ -132,118 +144,146 @@
   </div>
 
   <script>
-  const questions = [
-    {
-      q: "Você sente coceira ou ardência frequente na região íntima?",
-      a: ["Sim, é recorrente", "Às vezes", "Não"]
-    },
-    {
-      q: "Você já teve crises de candidíase mais de 2 vezes ao ano?",
-      a: ["Sim, várias vezes", "Poucas vezes", "Nunca"]
-    },
-    {
-      q: "Você já tentou algum tratamento e não funcionou?",
-      a: ["Sim, vários", "Apenas um", "Nunca tratei"]
-    },
-    {
-      q: "Você sente vergonha ou desconforto ao falar sobre isso?",
-      a: ["Sim, bastante", "Um pouco", "Não"]
-    },
-    {
-      q: "Você sabia que a candidíase pode afetar sua libido e autoestima?",
-      a: ["Não sabia", "Já ouvi falar", "Sim, sabia"]
-    },
-    {
-      q: "Você estaria disposta a usar um produto natural e aprovado pela Anvisa?",
-      a: ["Sim, com certeza", "Depende do valor", "Não confio"]
-    },
-    {
-      q: "Você prefere pagar somente na entrega do tratamento?",
-      a: ["Sim, me sinto mais segura", "Não, posso pagar agora"]
+    const questions = [
+      {
+        q: "Você sente coceira ou ardência frequente na região íntima?",
+        a: ["Sim, é recorrente", "Às vezes", "Não"]
+      },
+      {
+        q: "Você já teve crises de candidíase mais de 2 vezes ao ano?",
+        a: ["Sim, várias vezes", "Poucas vezes", "Nunca"]
+      },
+      {
+        q: "Você já tentou algum tratamento e não funcionou?",
+        a: ["Sim, vários", "Apenas um", "Nunca tratei"]
+      },
+      {
+        q: "Você sente vergonha ou desconforto ao falar sobre isso?",
+        a: ["Sim, bastante", "Um pouco", "Não"]
+      },
+      {
+        q: "Você sabia que a candidíase pode afetar sua libido e autoestima?",
+        a: ["Não sabia", "Já ouvi falar", "Sim, sabia"]
+      },
+      {
+        q: "Você estaria disposta a usar um produto natural e aprovado pela Anvisa?",
+        a: ["Sim, com certeza", "Depende do valor", "Não confio"]
+      },
+      {
+        q: "Você prefere pagar somente na entrega do tratamento?",
+        a: ["Sim, me sinto mais segura", "Não, posso pagar agora"]
+      }
+    ];
+
+    const images = [
+      "https://briannanicoletti.com.br/wp-content/uploads/2023/04/candidiase-de-repeticao-capa.jpg",
+      "https://conteudo.imguol.com.br/c/entretenimento/d7/2019/09/23/candidiase-mulher-com-coceira-dor-vagina-1569269179549_v2_615x300.jpg",
+      "https://guiadafarmacia.com.br/wp-content/uploads/2019/10/candidiase.jpg",
+      "https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/R3Z74KWF6JI27N2QDWG34A4GYA.jpg?smart=true&width=1200&height=630",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM15qkg29_-uakqAYdIehPPVVwCwW0vaeNKQ&s",
+      "https://img.freepik.com/fotos-gratis/conceito-de-spa-de-alto-angulo-com-pedras-e-plantas_23-2148268493.jpg?semt=ais_hybrid&w=740",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4b_yhsN5oneDTDMijfcqdloS6MUYVimKXw&s"
+    ];
+
+    let currentQuestion = 0;
+    const totalQuestions = questions.length;
+    const answers = [];
+    let videoWatched = false;
+
+    function renderQuestion() {
+      if (currentQuestion === 3 && !videoWatched) {
+        showVideoBeforeContinuing();
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      document.getElementById('question').innerText = q.q;
+      document.getElementById('options').innerHTML = '';
+      document.getElementById('video-container').style.display = 'none';
+      document.querySelector('.images-section img').src = images[currentQuestion];
+
+      q.a.forEach(answer => {
+        const btn = document.createElement('button');
+        btn.innerText = answer;
+        btn.onclick = () => {
+          answers.push(`${q.q} => ${answer}`);
+          currentQuestion++;
+          updateProgressBar();
+          if (currentQuestion < totalQuestions) {
+            renderQuestion();
+          } else {
+            showFinalOptions();
+          }
+        };
+        document.getElementById('options').appendChild(btn);
+      });
     }
-  ];
 
-  const images = [
-    "https://briannanicoletti.com.br/wp-content/uploads/2023/04/candidiase-de-repeticao-capa.jpg",
-    "https://conteudo.imguol.com.br/c/entretenimento/d7/2019/09/23/candidiase-mulher-com-coceira-dor-vagina-1569269179549_v2_615x300.jpg",
-    "https://guiadafarmacia.com.br/wp-content/uploads/2019/10/candidiase.jpg",
-    "https://newr7-r7-prod.web.arc-cdn.net/resizer/v2/R3Z74KWF6JI27N2QDWG34A4GYA.jpg?smart=true&auth=a6e5015714440e36524351f6c22932daebc184ea351da66a27c00aeae5febc0b&width=1200&height=630",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM15qkg29_-uakqAYdIehPPVVwCwW0vaeNKQ&s",
-    "https://img.freepik.com/fotos-gratis/conceito-de-spa-de-alto-angulo-com-pedras-e-plantas_23-2148268493.jpg?semt=ais_hybrid&w=740",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw4b_yhsN5oneDTDMijfcqdloS6MUYVimKXw&s"
-  ];
+   function showVideoBeforeContinuing() {
+  document.getElementById('question').innerText = "Antes de continuar, assista a este vídeo importante:";
+  document.getElementById('options').innerHTML = '';
+  document.getElementById('video-container').style.display = 'block';
 
-  let currentQuestion = 0;
-  const totalQuestions = questions.length;
-  const answers = [];
+  const video = document.getElementById('quiz-video');
+  video.currentTime = 0;
+  video.controls = true;
 
-  function renderQuestion() {
-    const q = questions[currentQuestion];
-    document.getElementById('question').innerText = q.q;
-    document.getElementById('options').innerHTML = '';
+  // Remove listeners antigos, se houver
+  video.onended = null;
+  video.ontimeupdate = null;
 
-    // Atualizar imagem com base na pergunta
-    document.querySelector('.images-section img').src = images[currentQuestion];
+  video.ontimeupdate = () => {
+    const percentWatched = (video.currentTime / video.duration) * 100;
 
-    q.a.forEach(answer => {
-      const btn = document.createElement('button');
-      btn.innerText = answer;
-      btn.onclick = () => {
-        answers.push(`${q.q} => ${answer}`);
-        currentQuestion++;
-        updateProgressBar();
-        if (currentQuestion < totalQuestions) {
-          renderQuestion();
-        } else {
-          showFinalOptions();
-        }
+    if (percentWatched >= 80 && !videoWatched) {
+      videoWatched = true;
+      video.ontimeupdate = null; // remove para não disparar de novo
+      renderQuestion();
+    }
+  };
+}
+
+    }
+
+    function updateProgressBar() {
+      const percent = (currentQuestion / totalQuestions) * 100;
+      document.getElementById('progressBar').style.width = percent + '%';
+    }
+
+    function showFinalOptions() {
+      document.getElementById('question').innerText = "Obrigado por completar o quiz! O que você gostaria de fazer agora?";
+      const optionsDiv = document.getElementById('options');
+      optionsDiv.innerHTML = '';
+      document.querySelector('.images-section img').src = "https://img.freepik.com/fotos-premium/resposta-positiva-excelente-mulher-feliz-sorridente-fecha-os-olhos-mostrando-sinais-de-aprovacao-gosta-e-concorda-de-pe-na-camiseta-contra-o-fundo-branco_176420-47273.jpg";
+
+      const whatsappBtn = document.createElement('button');
+      whatsappBtn.innerText = "Falar com um especialista (WhatsApp)";
+      whatsappBtn.onclick = () => {
+        const phone = "12991463146";
+        const message = encodeURIComponent(
+          "Olá, acabei de responder o quiz sobre candidíase e aqui estão minhas respostas:\n\n" +
+          answers.join("\n") +
+          "\n\nGostaria de saber mais sobre o tratamento com Candilib."
+        );
+        window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
       };
-      document.getElementById('options').appendChild(btn);
-    });
-  }
 
-  function updateProgressBar() {
-    const percent = (currentQuestion / totalQuestions) * 100;
-    document.getElementById('progressBar').style.width = percent + '%';
-  }
+      const siteBtn = document.createElement('button');
+      siteBtn.innerText = "Visitar o site e fazer a compra";
+      siteBtn.onclick = () => {
+        window.open('candilib.html', '_blank');
+      };
 
-  function showFinalOptions() {
-    document.getElementById('question').innerText = "Obrigado por completar o quiz! O que você gostaria de fazer agora?";
-    const optionsDiv = document.getElementById('options');
-    optionsDiv.innerHTML = '';
+      const finalButtonsContainer = document.createElement('div');
+      finalButtonsContainer.classList.add('final-buttons');
+      finalButtonsContainer.appendChild(whatsappBtn);
+      finalButtonsContainer.appendChild(siteBtn);
 
-    // Remove imagem final (ou troca por outra estática, se quiser)
-    document.querySelector('.images-section img').src = "https://img.freepik.com/fotos-premium/resposta-positiva-excelente-mulher-feliz-sorridente-fecha-os-olhos-mostrando-sinais-de-aprovacao-gosta-e-concorda-de-pe-na-camiseta-contra-o-fundo-branco_176420-47273.jpg";
+      optionsDiv.appendChild(finalButtonsContainer);
+      document.getElementById('progressBar').style.width = '100%';
+    }
 
-    const whatsappBtn = document.createElement('button');
-    whatsappBtn.innerText = "Falar com um especialista (WhatsApp)";
-    whatsappBtn.onclick = () => {
-      const phone = "12991463146";
-      const message = encodeURIComponent(
-        "Olá, acabei de responder o quiz sobre candidíase e aqui estão minhas respostas:\n\n" +
-        answers.join("\n") +
-        "\n\nGostaria de saber mais sobre o tratamento com Candilib."
-      );
-      window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-    };
-
-    const siteBtn = document.createElement('button');
-    siteBtn.innerText = "Visitar o site e fazer a compra";
-    siteBtn.onclick = () => {
-      window.open('candilib.html', '_blank');
-    };
-
-    const finalButtonsContainer = document.createElement('div');
-    finalButtonsContainer.classList.add('final-buttons');
-    finalButtonsContainer.appendChild(whatsappBtn);
-    finalButtonsContainer.appendChild(siteBtn);
-
-    optionsDiv.appendChild(finalButtonsContainer);
-    document.getElementById('progressBar').style.width = '100%';
-  }
-
-  renderQuestion();
-</script>
-
+    renderQuestion();
+  </script>
 </body>
 </html>
